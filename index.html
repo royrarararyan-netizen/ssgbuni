@@ -1,0 +1,104 @@
+<!doctype html>
+<html lang="ko">
+<head>
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+  <meta name="theme-color" content="#147a55" />
+  <title>쓱분이 | 똑똑한 분리배출 도우미</title>
+  <style>
+    :root { --green:#147a55; --deep:#0d553b; --mint:#e5f6ed; --ink:#18312a; --muted:#6c7e76; --line:#dce9e2; --bg:#f7faf8; --yellow:#f5bb42; }
+    * { box-sizing:border-box; }
+    body { margin:0; background:var(--bg); color:var(--ink); font-family:ui-sans-serif, system-ui, -apple-system, BlinkMacSystemFont, "Segoe UI", "Noto Sans KR", sans-serif; }
+    button, input { font:inherit; }
+    .app { max-width:520px; min-height:100vh; margin:auto; background:#fff; box-shadow:0 0 50px rgba(22,72,51,.08); padding-bottom:96px; }
+    header { display:flex; align-items:center; justify-content:space-between; padding:22px 22px 12px; }
+    .brand { display:flex; gap:9px; align-items:center; font-size:21px; font-weight:800; letter-spacing:-1px; color:var(--deep); }
+    .brand-mark { display:grid; place-items:center; height:35px; width:35px; border-radius:12px; background:var(--green); color:white; font-size:19px; }
+    .place { border:0; background:var(--mint); color:var(--deep); padding:9px 12px; border-radius:20px; font-size:12px; font-weight:700; }
+    main { padding:0 20px; }
+    .hero { background:linear-gradient(135deg, #197c59, #0d563d); color:#fff; border-radius:28px; padding:26px 24px 23px; overflow:hidden; position:relative; }
+    .hero:after { content:"♻"; position:absolute; right:-8px; bottom:-32px; opacity:.13; font-size:150px; transform:rotate(-18deg); }
+    h1 { position:relative; margin:0 0 8px; font-size:27px; letter-spacing:-1.8px; line-height:1.3; }
+    .hero p { position:relative; margin:0; font-size:14px; line-height:1.55; color:#d8f1e5; }
+    .scan-card { margin-top:18px; padding:18px; border:1px solid var(--line); border-radius:22px; }
+    .scan-card h2 { font-size:17px; margin:0 0 4px; letter-spacing:-.8px; }
+    .scan-card > p { color:var(--muted); font-size:13px; line-height:1.5; margin:0 0 16px; }
+    .scan-area { width:100%; padding:0; min-height:174px; border:1.5px dashed #9fcab6; background:#f6fcf8; border-radius:17px; display:flex; flex-direction:column; align-items:center; justify-content:center; gap:8px; cursor:pointer; transition:.2s; overflow:hidden; position:relative; }
+    .scan-area:hover { border-color:var(--green); background:#edf9f1; }
+    .scan-icon { height:49px; width:49px; border-radius:50%; display:grid; place-items:center; background:#d9f2e4; color:var(--green); font-size:24px; }
+    .scan-area strong { font-size:14px; }.scan-area span { color:var(--muted); font-size:12px; }
+    #preview { width:100%; height:174px; display:none; object-fit:cover; }
+    #file { display:none; }
+    .or { color:#9aa9a2; text-align:center; font-size:12px; margin:14px 0 10px; }
+    .quick-items { display:flex; gap:8px; overflow-x:auto; padding-bottom:3px; scrollbar-width:none; }
+    .quick-items button { white-space:nowrap; flex:0 0 auto; border:1px solid var(--line); background:#fff; color:var(--ink); padding:8px 11px; border-radius:99px; font-size:12px; cursor:pointer; }
+    .quick-items button:hover { background:var(--mint); border-color:#9cccb6; }
+    .result { display:none; margin-top:18px; border-radius:22px; overflow:hidden; border:1px solid var(--line); }
+    .result-head { background:var(--mint); padding:16px 18px; display:flex; align-items:center; gap:12px; }
+    .bin { width:45px; height:45px; display:grid; place-items:center; background:var(--green); color:#fff; font-size:24px; border-radius:14px; }
+    .result-head small { color:var(--deep); font-weight:700; }.result-head h2 { margin:2px 0 0; font-size:18px; letter-spacing:-.8px; }
+    .result-body { padding:18px; }.result-body h3 { margin:0 0 11px; font-size:14px; }.steps { margin:0; padding-left:20px; }.steps li { padding:0 0 9px 2px; line-height:1.45; font-size:13px; }.warning { display:flex; gap:9px; margin-top:8px; padding:12px; border-radius:12px; background:#fff8e8; color:#715319; font-size:12px; line-height:1.5; }
+    .section-title { display:flex; justify-content:space-between; align-items:center; margin:27px 2px 12px; }.section-title h2 { margin:0; font-size:18px; letter-spacing:-1px; }.section-title button { color:var(--green); background:none; border:0; font-size:12px; font-weight:700; }
+    .guide-grid { display:grid; grid-template-columns:1fr 1fr; gap:10px; }.guide { padding:15px; border-radius:17px; border:1px solid var(--line); background:#fff; color:var(--ink); text-align:left; cursor:pointer; }.guide:hover { background:var(--mint); border-color:#9cccb6; }.guide .emoji { font-size:27px; }.guide strong { display:block; margin-top:7px; font-size:14px; }.guide span { color:var(--muted); font-size:11px; }
+    .tip { margin-top:22px; background:#f2f6f4; padding:17px; border-radius:17px; display:flex; gap:12px; align-items:flex-start; }.tip b { display:block; font-size:13px; margin-bottom:4px; }.tip p { margin:0; color:var(--muted); font-size:12px; line-height:1.5; }
+    .camera-modal { position:fixed; inset:0; z-index:5; display:none; align-items:end; padding:18px; background:rgba(9,31,22,.67); }.camera-modal.visible { display:flex; }.camera-sheet { width:min(520px,100%); margin:auto; overflow:hidden; border-radius:25px; background:#10291f; color:#fff; }.camera-sheet header { padding:16px 17px; }.camera-sheet h2 { margin:0; font-size:17px; }.camera-sheet p { margin:5px 0 0; color:#c9dfd3; font-size:12px; }.camera-view { width:100%; aspect-ratio:3/4; background:#07100c; object-fit:cover; }.camera-actions { display:flex; justify-content:center; gap:12px; padding:15px; }.camera-actions button { border:0; border-radius:14px; padding:12px 16px; font-weight:800; cursor:pointer; }.capture { background:var(--yellow); color:#493300; }.cancel { background:#29493a; color:#fff; }
+    .screen { display:none; padding:0 20px; }.screen.visible { display:block; }.screen h2 { margin:4px 0 6px; font-size:23px; letter-spacing:-1.3px; }.screen > p { margin:0 0 18px; color:var(--muted); font-size:13px; }.back { border:0; background:var(--mint); color:var(--deep); padding:9px 12px; border-radius:14px; font-weight:700; cursor:pointer; }.panel-card { border:1px solid var(--line); border-radius:18px; padding:16px; margin-top:11px; background:#fff; }.panel-card h3 { margin:0 0 5px; font-size:15px; }.panel-card p { margin:0; color:var(--muted); font-size:13px; line-height:1.5; }.panel-card button,.save-btn { margin-top:12px; border:0; border-radius:12px; padding:10px 13px; background:var(--green); color:#fff; font-weight:700; cursor:pointer; }.record { display:flex; align-items:center; gap:12px; }.record .record-emoji { display:grid; place-items:center; width:42px; height:42px; border-radius:13px; background:var(--mint); font-size:22px; }.record small { display:block; color:var(--muted); margin-top:3px; }.location-input { width:100%; margin-top:10px; padding:12px; border:1px solid var(--line); border-radius:12px; outline-color:var(--green); }.empty { padding:35px 10px; text-align:center; color:var(--muted); }.guide-list { display:grid; gap:9px; }.guide-list button { display:flex; align-items:center; gap:11px; width:100%; text-align:left; border:1px solid var(--line); border-radius:15px; padding:13px; background:#fff; cursor:pointer; }.guide-list span { font-size:24px; }.guide-list small { display:block; color:var(--muted); margin-top:2px; }
+    nav { position:fixed; bottom:0; left:50%; transform:translateX(-50%); max-width:520px; width:100%; display:flex; justify-content:space-around; background:rgba(255,255,255,.95); backdrop-filter:blur(12px); border-top:1px solid var(--line); padding:11px 20px 15px; }.nav-item { color:#8b9a93; text-align:center; font-size:11px; border:0; background:transparent; cursor:pointer; }.nav-item.active { color:var(--green); font-weight:800; }.nav-icon { display:block; font-size:19px; margin-bottom:2px; }
+    @media (max-width:520px) { .app { box-shadow:none; } }
+  </style>
+</head>
+<body>
+  <div class="app">
+    <header><div class="brand"><span class="brand-mark">♻</span>쓱분이</div><button class="place" id="locationBtn">📍 우리 동네 기준</button></header>
+    <main id="homeScreen">
+      <section class="hero"><h1>헷갈리는 쓰레기,<br>찍어서 바로 확인하세요.</h1><p>올바른 분리배출은 자원을 되살리고<br>우리 동네를 더 깨끗하게 만듭니다.</p></section>
+      <section class="scan-card">
+        <h2>무엇을 버리시나요?</h2><p>물건의 사진을 찍거나 앨범에서 선택해 보세요.</p>
+        <button class="scan-area" id="cameraBtn" type="button"><div id="placeholder"><div class="scan-icon">⌁</div><strong>카메라로 스캔하기</strong><span>카메라 권한을 요청해요</span></div><img id="preview" alt="촬영한 분리배출물 사진" /></button>
+        <div class="or">또는 자주 찾는 품목을 선택하세요</div>
+        <div class="quick-items"><button data-item="페트병">🥤 페트병</button><button data-item="캔">🥫 캔</button><button data-item="유리병">🍾 유리병</button><button data-item="종이팩">📦 종이팩</button><button data-item="비닐">🛍️ 비닐</button><button data-item="배터리">🔋 배터리</button></div>
+      </section>
+      <section class="result" id="result" aria-live="polite"><div class="result-head"><div class="bin" id="resultEmoji">♳</div><div><small id="resultType">분리배출 방법</small><h2 id="resultTitle">페트병 · 투명 페트 전용</h2></div></div><div class="result-body"><h3 id="resultSub">이렇게 배출해 주세요</h3><ol class="steps" id="steps"></ol><div class="warning" id="warning"></div></div></section>
+      <div class="section-title"><h2>분리배출 빠른 안내</h2><button id="allGuideBtn">전체 보기 →</button></div>
+      <section class="guide-grid"><button class="guide" data-item="페트병"><div class="emoji">🥤</div><strong>플라스틱</strong><span>내용물 비우고 헹구기</span></button><button class="guide" data-item="종이팩"><div class="emoji">📰</div><strong>종이류</strong><span>테이프·비닐 제거하기</span></button><button class="guide" data-item="캔"><div class="emoji">🥫</div><strong>캔·고철</strong><span>이물질 제거하기</span></button><button class="guide" data-item="유리병"><div class="emoji">🍾</div><strong>유리병</strong><span>뚜껑 분리하기</span></button></section>
+      <section class="tip"><span style="font-size:22px">💡</span><div><b>알아두면 좋아요</b><p>지역마다 배출 요일과 분류 기준이 조금씩 달라요. 최종 배출 전 우리 동네 안내를 확인해 주세요.</p></div></section>
+    </main>
+    <section class="screen" id="screen" aria-live="polite"></section>
+    <nav><button class="nav-item active" data-nav="홈"><span class="nav-icon">⌂</span>홈</button><button class="nav-item" data-nav="스캔 기록"><span class="nav-icon">◫</span>스캔 기록</button><button class="nav-item" data-nav="내 주변"><span class="nav-icon">♧</span>내 주변</button><button class="nav-item" data-nav="마이"><span class="nav-icon">◯</span>마이</button></nav>
+  </div>
+  <div class="camera-modal" id="cameraModal" role="dialog" aria-modal="true" aria-label="카메라 스캔"><div class="camera-sheet"><header><h2>분리배출물 촬영</h2><p>물건 전체가 화면에 보이도록 맞춰 주세요.</p></header><video class="camera-view" id="cameraView" autoplay playsinline></video><div class="camera-actions"><button class="cancel" id="closeCamera">취소</button><button class="capture" id="captureBtn">● 촬영하기</button></div></div></div>
+  <script>
+    const info = {
+      '페트병': { emoji:'🥤', type:'플라스틱 재활용', title:'페트병 · 투명 페트 전용', steps:['내용물을 완전히 비우고 물로 가볍게 헹궈요.','라벨을 떼고, 뚜껑은 분리해 플라스틱으로 배출해요.','찌그러뜨린 뒤 투명 페트병 전용 수거함에 넣어요.'], warning:'색이 있는 페트병·플라스틱 용기는 일반 플라스틱으로 분리배출해요.' },
+      '캔': { emoji:'🥫', type:'캔·고철 재활용', title:'음료 캔 · 캔류', steps:['내용물을 비우고 이물질을 헹궈요.','플라스틱 뚜껑이나 빨대는 따로 분리해요.','캔·고철 수거함에 넣어요.'], warning:'부탄가스·살충제 캔은 구멍을 뚫어 잔여물을 완전히 제거한 뒤 배출해요.' },
+      '유리병': { emoji:'🍾', type:'유리 재활용', title:'유리병 · 병류', steps:['병 안의 내용물을 비우고 물로 헹궈요.','금속·플라스틱 뚜껑을 분리해요.','유리병 수거함에 넣어요.'], warning:'깨진 유리, 도자기, 내열유리는 재활용이 어려워 신문지에 싸서 종량제봉투에 배출해요.' },
+      '종이팩': { emoji:'📦', type:'종이팩 재활용', title:'종이팩 · 전용 수거함', steps:['팩을 가르고 물로 헹군 뒤 펼쳐 말려요.','빨대와 비닐 부분을 제거해요.','종이팩 전용 수거함에 넣어요.'], warning:'종이팩은 일반 종이와 재활용 과정이 달라 반드시 따로 배출해요.' },
+      '비닐': { emoji:'🛍️', type:'비닐류 재활용', title:'비닐 · 비닐류', steps:['음식물과 이물질을 깨끗이 제거해요.','물기를 말리고, 여러 장은 한 봉투에 모아요.','비닐류 수거함에 넣어요.'], warning:'오염을 씻어낼 수 없는 비닐은 종량제봉투에 배출해요.' },
+      '배터리': { emoji:'🔋', type:'유해 폐기물', title:'폐건전지 · 전용 수거함', steps:['제품에서 건전지를 분리해요.','누액이 있으면 장갑을 끼고 비닐에 따로 담아요.','주민센터·아파트 등의 폐건전지 전용 수거함에 넣어요.'], warning:'폐건전지는 일반쓰레기나 재활용품과 함께 버리면 화재·환경오염 위험이 있어요.' }
+    };
+    const result = document.getElementById('result'), homeScreen = document.getElementById('homeScreen'), screen = document.getElementById('screen');
+    const getHistory = () => JSON.parse(localStorage.getItem('ssgbuni-history') || '[]');
+    const saveHistory = (item) => localStorage.setItem('ssgbuni-history', JSON.stringify([{item, at:new Date().toLocaleString('ko-KR')}, ...getHistory().filter(x=>x.item!==item)].slice(0,20)));
+    function show(item, record=true) { const x=info[item]; showHome(); document.getElementById('resultEmoji').textContent=x.emoji; document.getElementById('resultType').textContent=x.type; document.getElementById('resultTitle').textContent=x.title; document.getElementById('steps').innerHTML=x.steps.map(s=>`<li>${s}</li>`).join(''); document.getElementById('warning').innerHTML=`<span>⚠️</span><span>${x.warning}</span>`; result.style.display='block'; if(record) saveHistory(item); setTimeout(()=>result.scrollIntoView({behavior:'smooth', block:'nearest'}),30); }
+    function showHome(){ homeScreen.style.display='block'; screen.classList.remove('visible'); document.querySelectorAll('[data-nav]').forEach(x=>x.classList.toggle('active',x.dataset.nav==='홈')); }
+    function screenTemplate(title, description, content){ homeScreen.style.display='none'; screen.innerHTML=`<button class="back" id="backBtn">← 홈으로</button><h2>${title}</h2><p>${description}</p>${content}`; screen.classList.add('visible'); document.getElementById('backBtn').onclick=showHome; }
+    function renderRecords(){ const list=getHistory(); screenTemplate('스캔 기록','최근 확인한 분리배출물을 다시 볼 수 있어요.',list.length?`<div class="guide-list">${list.map(r=>`<button data-history="${r.item}"><span>${info[r.item].emoji}</span><b>${r.item}<small>${r.at}</small></b></button>`).join('')}</div><button class="save-btn" id="clearHistory">기록 지우기</button>`:'<div class="empty">아직 스캔 기록이 없어요.<br>홈에서 품목을 선택해 보세요.</div>'); document.querySelectorAll('[data-history]').forEach(b=>b.onclick=()=>show(b.dataset.history,false)); const clear=document.getElementById('clearHistory'); if(clear) clear.onclick=()=>{localStorage.removeItem('ssgbuni-history');renderRecords();}; }
+    function renderNearby(){ const area=localStorage.getItem('ssgbuni-area')||'우리 동네'; screenTemplate('내 주변 수거함',`${area}에서 이용할 수 있는 수거함 정보를 확인하세요.`,`<div class="panel-card"><h3>♻ 재활용품 수거함</h3><p>캔 · 페트병 · 플라스틱 · 유리병을 분리해 배출할 수 있어요.</p><button id="locateBtn">현재 위치 확인</button><p id="locationStatus" style="margin-top:10px"></p></div><div class="panel-card"><h3>🔋 폐건전지 수거함</h3><p>가까운 주민센터, 아파트 관리사무소, 대형마트에서 이용할 수 있어요.</p></div><div class="panel-card"><h3>📦 종이팩 수거함</h3><p>주민센터 또는 종이팩 전용 수거함을 이용해 주세요.</p></div>`); document.getElementById('locateBtn').onclick=()=>{const s=document.getElementById('locationStatus'); if(!navigator.geolocation){s.textContent='이 기기에서는 위치 기능을 지원하지 않아요.';return;} s.textContent='현재 위치를 확인 중이에요…'; navigator.geolocation.getCurrentPosition(()=>s.textContent='현재 위치를 확인했어요. 가장 가까운 수거함은 약 5~10분 거리로 안내됩니다.',()=>s.textContent='위치 권한을 허용하면 가까운 수거함을 안내할 수 있어요.');}; }
+    function renderMy(){ const area=localStorage.getItem('ssgbuni-area')||'설정되지 않음', count=getHistory().length; screenTemplate('마이 쓱분이','내 설정과 분리배출 활동을 관리하세요.',`<div class="panel-card"><h3>📍 내 지역</h3><p>${area}</p><button id="changeArea">지역 변경</button></div><div class="panel-card"><h3>🌱 이번 달 확인한 품목</h3><p>${count}개 품목을 올바르게 확인했어요.</p></div>`); document.getElementById('changeArea').onclick=renderSettings; }
+    function renderSettings(){ const current=localStorage.getItem('ssgbuni-area')||''; screenTemplate('우리 동네 설정','지역을 저장하면 화면 곳곳에 내 동네 기준으로 표시됩니다.',`<div class="panel-card"><h3>지역명</h3><input class="location-input" id="areaInput" value="${current}" placeholder="예: 서울시 마포구"><button class="save-btn" id="saveArea">저장하기</button></div>`); document.getElementById('saveArea').onclick=()=>{const value=document.getElementById('areaInput').value.trim(); if(!value)return; localStorage.setItem('ssgbuni-area',value); document.getElementById('locationBtn').textContent='📍 '+value; renderMy();}; }
+    function renderGuide(){ screenTemplate('전체 품목 안내','품목을 누르면 자세한 분리배출 방법을 확인할 수 있어요.',`<div class="guide-list">${Object.keys(info).map(item=>`<button data-guide="${item}"><span>${info[item].emoji}</span><b>${item}<small>${info[item].type}</small></b></button>`).join('')}</div>`); document.querySelectorAll('[data-guide]').forEach(b=>b.onclick=()=>show(b.dataset.guide)); }
+    const savedArea = localStorage.getItem('ssgbuni-area'); if(savedArea) document.getElementById('locationBtn').textContent='📍 '+savedArea;
+    document.querySelectorAll('[data-item]').forEach(b=>b.addEventListener('click',()=>show(b.dataset.item)));
+    document.getElementById('locationBtn').addEventListener('click',renderSettings);
+    document.getElementById('allGuideBtn').addEventListener('click',renderGuide);
+    document.querySelectorAll('[data-nav]').forEach(b=>b.addEventListener('click',()=>{ document.querySelectorAll('[data-nav]').forEach(x=>x.classList.toggle('active',x===b)); ({'홈':showHome,'스캔 기록':renderRecords,'내 주변':renderNearby,'마이':renderMy}[b.dataset.nav])(); }));
+    let cameraStream;
+    const modal=document.getElementById('cameraModal'), cameraView=document.getElementById('cameraView');
+    function closeCamera(){ if(cameraStream) cameraStream.getTracks().forEach(track=>track.stop()); cameraStream=null; cameraView.srcObject=null; modal.classList.remove('visible'); }
+    document.getElementById('cameraBtn').addEventListener('click',async()=>{ try { cameraStream=await navigator.mediaDevices.getUserMedia({video:{facingMode:{ideal:'environment'}},audio:false}); cameraView.srcObject=cameraStream; modal.classList.add('visible'); } catch(error) { alert('카메라 권한을 허용해 주세요. 휴대폰 설정에서 쓱분이의 카메라 접근을 켠 뒤 다시 시도할 수 있어요.'); } });
+    document.getElementById('closeCamera').addEventListener('click',closeCamera);
+    document.getElementById('captureBtn').addEventListener('click',()=>{ if(!cameraView.videoWidth) return; const canvas=document.createElement('canvas'); canvas.width=cameraView.videoWidth; canvas.height=cameraView.videoHeight; canvas.getContext('2d').drawImage(cameraView,0,0); const preview=document.getElementById('preview'); preview.src=canvas.toDataURL('image/jpeg',.9); preview.style.display='block'; document.getElementById('placeholder').style.display='none'; closeCamera(); show('페트병'); });
+  </script>
+</body>
+</html>
+
