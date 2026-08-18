@@ -1,0 +1,7 @@
+<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 512 512">
+  <rect width="512" height="512" rx="112" fill="#147a55"/>
+  <circle cx="256" cy="256" r="174" fill="#e5f6ed"/>
+  <path fill="#147a55" d="M263 116l56 70h-38l15 42c13 37-7 77-45 90l-20-54c13-5 20-19 15-32l-16-46h-35l68-70zm-104 145l56 4-19 32 42 16c35 14 51 55 35 91l-55-20c5-13-1-28-14-33l-46-18-17 30-10-102zm205 5l-46 31 24 29-27 36c-23 31-68 38-99 14l34-47c11 8 27 6 35-5l30-39-22-27 91 8z"/>
+  <text x="256" y="450" text-anchor="middle" font-family="Arial, sans-serif" font-size="58" font-weight="700" fill="#147a55">쓱분이</text>
+</svg>
+
