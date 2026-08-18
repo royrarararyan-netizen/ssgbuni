@@ -4,6 +4,12 @@
   <meta charset="UTF-8" />
   <meta name="viewport" content="width=device-width, initial-scale=1.0" />
   <meta name="theme-color" content="#147a55" />
+  <meta name="mobile-web-app-capable" content="yes" />
+  <meta name="apple-mobile-web-app-capable" content="yes" />
+  <meta name="apple-mobile-web-app-status-bar-style" content="default" />
+  <link rel="manifest" href="manifest.webmanifest" />
+  <link rel="icon" href="icon.svg" type="image/svg+xml" />
+  <link rel="apple-touch-icon" href="icon.svg" />
   <title>쓱분이 | 똑똑한 분리배출 도우미</title>
   <style>
     :root { --green:#147a55; --deep:#0d553b; --mint:#e5f6ed; --ink:#18312a; --muted:#6c7e76; --line:#dce9e2; --bg:#f7faf8; --yellow:#f5bb42; }
@@ -98,6 +104,7 @@
     document.getElementById('cameraBtn').addEventListener('click',async()=>{ try { cameraStream=await navigator.mediaDevices.getUserMedia({video:{facingMode:{ideal:'environment'}},audio:false}); cameraView.srcObject=cameraStream; modal.classList.add('visible'); } catch(error) { alert('카메라 권한을 허용해 주세요. 휴대폰 설정에서 쓱분이의 카메라 접근을 켠 뒤 다시 시도할 수 있어요.'); } });
     document.getElementById('closeCamera').addEventListener('click',closeCamera);
     document.getElementById('captureBtn').addEventListener('click',()=>{ if(!cameraView.videoWidth) return; const canvas=document.createElement('canvas'); canvas.width=cameraView.videoWidth; canvas.height=cameraView.videoHeight; canvas.getContext('2d').drawImage(cameraView,0,0); const preview=document.getElementById('preview'); preview.src=canvas.toDataURL('image/jpeg',.9); preview.style.display='block'; document.getElementById('placeholder').style.display='none'; closeCamera(); show('페트병'); });
+    if ('serviceWorker' in navigator) window.addEventListener('load', () => navigator.serviceWorker.register('./service-worker.js'));
   </script>
 </body>
 </html>
