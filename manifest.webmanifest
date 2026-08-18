@@ -1,0 +1,11 @@
+{
+  "name": "쓱분이 - 분리배출 도우미",
+  "short_name": "쓱분이",
+  "description": "사진으로 확인하는 똑똑한 분리배출 도우미",
+  "start_url": "./",
+  "display": "standalone",
+  "background_color": "#f7faf8",
+  "theme_color": "#147a55",
+  "icons": [{ "src": "icon.svg", "sizes": "any", "type": "image/svg+xml", "purpose": "any maskable" }]
+}
+
